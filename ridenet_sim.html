@@ -1034,6 +1034,25 @@
     font-size: 12px; line-height: 1.5;
     color: #4a5568;
   }
+  .tie-legend {
+    margin: 0 20px 18px; padding: 10px 14px;
+    background: #fafbfc;
+    border: 1px solid #e1e5ec;
+    border-radius: 4px;
+    font-size: 11.5px;
+    color: #4a5568;
+  }
+  .tie-legend-row {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: 14px; margin-bottom: 6px;
+  }
+  .tie-legend-row:last-child { margin-bottom: 0; }
+  .tie-legend-label {
+    font-weight: 600; color: #1a1a1a; min-width: 64px;
+  }
+  .tie-legend-item {
+    display: inline-flex; align-items: center; gap: 5px;
+  }
   .rp-timeline-header {
     display: flex; align-items: center; padding: 12px 20px 8px;
   }
@@ -1322,6 +1341,47 @@
     border: none; font-family: inherit;
   }
   .gate-modal-btn:hover { background: #005ba5; }
+  .advance-tutorial-modal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(20, 25, 40, 0.5);
+    align-items: center; justify-content: center;
+    z-index: 1300; padding: 24px;
+  }
+  .advance-tutorial-modal.active { display: flex; }
+  .advance-tutorial-box {
+    background: white; border-radius: 8px; max-width: 460px; width: 100%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    padding: 28px;
+    border-left: 4px solid #1d8a4f;
+  }
+  .advance-tutorial-title {
+    font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px;
+  }
+  .advance-tutorial-subtitle {
+    font-size: 13px; color: #5a6477; line-height: 1.55; margin-bottom: 18px;
+  }
+  .advance-tutorial-visual {
+    display: flex; align-items: center; justify-content: center;
+    padding: 22px 16px;
+    background: #f8f9fb; border-radius: 6px;
+    margin-bottom: 18px;
+  }
+  .advance-tutorial-btn-mock {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px;
+    background: white;
+    border: 1.5px solid #d1d5db;
+    border-radius: 5px;
+    font-size: 13px; font-weight: 500; color: #1a1a1a;
+  }
+  .advance-tutorial-footer { display: flex; justify-content: center; }
+  .advance-tutorial-btn {
+    background: #0072c6; color: white;
+    padding: 8px 24px; border-radius: 4px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    border: none; font-family: inherit;
+  }
+  .advance-tutorial-btn:hover { background: #005ba5; }
   .debrief-modal {
     display: none; position: fixed; inset: 0;
     background: rgba(20, 25, 40, 0.5);
@@ -1623,7 +1683,15 @@
                 </div>
                 <div class="bw-card-divider"></div>
                 <div class="centrality-tie-note">
-                  A tie in this network means two stakeholders are both active in the conversation at this time (emails, posts, news coverage, or other observable communication).
+                  A tie reflects the relationship between two stakeholders. Strong ties mean the two communicate regularly and have built trust over time. Weak ties mean contact is rare or transactional, with little history and built up trust.
+                </div>
+                <div class="tie-legend">
+                  <div class="tie-legend-row">
+                    <span class="tie-legend-label">Strength:</span>
+                    <span class="tie-legend-item"><svg width="32" height="10" viewBox="0 0 32 10"><line x1="2" y1="5" x2="30" y2="5" stroke="#475569" stroke-width="4" stroke-opacity="0.9" stroke-linecap="round"/></svg> Strong</span>
+                    <span class="tie-legend-item"><svg width="32" height="10" viewBox="0 0 32 10"><line x1="2" y1="5" x2="30" y2="5" stroke="#475569" stroke-width="2.5" stroke-opacity="0.65" stroke-linecap="round"/></svg> Moderate</span>
+                    <span class="tie-legend-item"><svg width="32" height="10" viewBox="0 0 32 10"><line x1="2" y1="5" x2="30" y2="5" stroke="#475569" stroke-width="1.5" stroke-opacity="0.4" stroke-linecap="round"/></svg> Weak</span>
+                  </div>
                 </div>
                 <div class="bw-network-canvas" id="network-canvas-current">
                   <div class="bw-network-controls">
@@ -1638,10 +1706,10 @@
               <div class="bw-card right-panel">
                 <div id="rp-centrality">
                   <div class="centrality-title">Centralities at <span id="centrality-time-label">T1</span></div>
-                  <div class="centrality-subtitle">Computed for the stakeholders active in the conversation at this time. Sorted by closeness.</div>
+
                   <table class="centrality-table">
                     <thead>
-                      <tr><th class="cent-name">Stakeholder</th><th class="cent-num">Deg</th><th class="cent-num">Close</th><th class="cent-num">Btwn</th></tr>
+                      <tr><th class="cent-name"></th><th class="cent-num">Deg</th><th class="cent-num">Close</th><th class="cent-num">Btwn</th></tr>
                     </thead>
                     <tbody id="centrality-tbody"></tbody>
                   </table>
@@ -1774,6 +1842,22 @@
   </div>
 </div>
 
+<div class="advance-tutorial-modal" id="advance-tutorial-modal">
+  <div class="advance-tutorial-box">
+    <div class="advance-tutorial-title">Inbox complete</div>
+    <div class="advance-tutorial-subtitle">You have answered all required emails for this time period. Switch over to the social listening dashboard and click the Refresh button to advance to the next time period.</div>
+    <div class="advance-tutorial-visual">
+      <div class="advance-tutorial-btn-mock">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4a8 8 0 1 0 7.74 10h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+        <span>Refresh</span>
+      </div>
+    </div>
+    <div class="advance-tutorial-footer">
+      <button class="advance-tutorial-btn" onclick="dismissAdvanceTutorial()">Take me there</button>
+    </div>
+  </div>
+</div>
+
 <div class="article-modal" id="article-modal" onclick="closeArticle(event)">
   <div class="article-modal-box" onclick="event.stopPropagation()">
     <div class="article-publication">The Information</div>
@@ -1787,6 +1871,7 @@
       <p>He said all of this from the front seat of a car operated by a company about to go public on the promise that its drivers feel differently.</p>
       <p>I have spent the last six hours speaking with current and former RideNet drivers in New York, Atlanta, Chicago, and Boston. Four of them agreed to be quoted. Their accounts converge on a single observation: the brand story RideNet has been telling investors is not the brand story drivers experience in the markets that account for most of the company's growth.</p>
       <p>Aisha Patel, a New York driver who is on the Streak Bonus tier regularly, told me she has been waiting for someone to say what Daniel said. "The bonus structure is the model. We chase the streak because we have to. The neighbor thing is something the company puts on top of what we already do." Ray Diaz, a former RideNet driver now at a competitor in Atlanta, said he left RideNet not because of the platform but because the marketing made him feel dishonest to passengers. "I am not their neighbor. I am their driver. There is a difference and the company knows there is a difference."</p>
+      <p>Lisa Martinez, who has served as RideNet's Isla Vista community liaison since the company's founding in 2018, said the brand promise that built the company is also what is now at stake. "The Daniel from 2018 is the same person as the Daniel from today," she told me. "If the company forgets that, they forget us too. I have not heard from anyone there since this morning. That is unusual."</p>
       <p>The substantive question is whether the company's brand promise can survive its own scale. Naomi Tate, a sociologist at Cornell whose research on platform working conditions has documented patterns consistent with what Daniel describes, told me the story is the empirical case study she has been arguing should exist. "What he describes is what my work has been describing in journal articles for three years. The difference is that you can now point to a specific driver, a specific shift, and a police report that documents what the conditions actually produced."</p>
       <p id="article-response-para">RideNet's response, transmitted to me just before deadline, says the company is reviewing the incident and remains committed to the working conditions of its driver community. It does not address the substance of what Daniel said. It does not respond to the question about the Streak Bonus structure. It does not acknowledge the gap between the metropolitan markets, where Daniel and Patel work, and the college town markets that built the brand.</p>
       <p>Pricing for the company's public offering is scheduled for next week. As of this evening two pension funds have withdrawn from the book. Senior equity analyst Mitchell Reinhardt lowered his price target by twenty-eight percent on Bloomberg this afternoon and said pricing on schedule is unlikely. The California Public Utilities Commission issued a public request for information at five fourteen this evening regarding driver classification practices and the accuracy of representations in the offering documents.</p>
@@ -1852,14 +1937,14 @@ const timePoints = {
       { icon: 'gray', iconName: 'hash', title: 'Hashtag Tracking', desc: '#PoweredByNeighbors trending positively in college towns.', time: '', detail: 'Hashtag Tracking shows which tags are being used about the brand. Right now the main one is #PoweredByNeighbors, used positively by drivers and riders in Athens, Boulder, Isla Vista, and Madison. Around 623 uses this week. No negative or critical hashtags are trending.' }
     ],
     stakeholders: [
-      { name: 'Worker Advocacy', barPct: 14, basePct: 14, color: '#d97706', change: '0%', changeClass: 'flat', detail: 'Worker advocacy coalition (Mobility Workers Alliance, Driver Safety Coalition, Workforce Futures Foundation) is at its normal resting state. Renee Olsen has posted her standard critique twice this week. Engagement is consistent with the 90-day baseline. This coalition has been making the same structural argument about driver classification for three years. They are dormant in the sense that they have not received a new triggering event, but they are not inactive. They are waiting.' },
-      { name: 'Drivers (Metro)', barPct: 18, basePct: 18, color: '#c2272d', change: '0%', changeClass: 'flat', detail: 'Metro drivers across the 38 markets are posting at typical levels. Aisha P. in New York has shared a couple of routine posts about long shifts. The discourse is the usual mix of complaints about cancellation policy and surge cap, but nothing trending or organized. Coalition has latent capacity to mobilize but no current trigger.' },
-      { name: 'Media', barPct: 22, basePct: 16, color: '#1976d2', change: '↑ 38%', changeClass: 'flat', detail: 'Business press coverage is elevated because of the upcoming public offering. Janelle Foster at Bloomberg has run a preview piece. David Park at The Information is reportedly working on a follow-up to his earlier coverage. Caroline Stahl is quiet at the moment. Coverage is mostly neutral to positive, focused on the differentiated brand story.' },
-      { name: 'Research / Academic', barPct: 16, basePct: 16, color: '#7b1fa2', change: '0%', changeClass: 'flat', detail: 'Research and academic critics are at baseline. Naomi Tate at Cornell, a labor sociologist whose work focuses on platform working conditions, has been publishing on rideshare platforms for several years. Hassan Qureshi at UC Berkeley directs the Lab on Algorithmic Inference and works on platform data practices and inference. The Center on Algorithmic Accountability is the umbrella research org. None of them has fired an active campaign this week.' },
-      { name: 'Riders', barPct: 20, basePct: 20, color: '#1d8a4f', change: '0%', changeClass: 'flat', detail: 'Rider conversation is at baseline. Maya H. and James W. continue to post occasionally about their experience. The brand authenticity gap (strong in college towns, weaker in metros) is visible in the resting state of the rider conversation but is not currently a problem.' },
-      { name: 'Drivers (College)', barPct: 19, basePct: 19, color: '#f59e0b', change: '0%', changeClass: 'flat', detail: 'College town drivers are at baseline with mild positive momentum. Tomás G. in Athens posted a weekend earnings update yesterday with the hashtag ##PoweredByNeighbors that has done well in the local market. This coalition is the strongest defender of the brand and would be the first line of organic response if anything happened.' },
-      { name: 'Public Investors', barPct: 18, basePct: 12, color: '#5e35b1', change: '↑ 50%', changeClass: 'flat', detail: 'Public market investors are elevated above their usual baseline because the public offering is in ten days. Mitchell Reinhardt, the senior equity analyst, has been quoted in The Information being skeptical about the metro economics story but bullish on the college town network effect. Pension fund mobility investors are evaluating participation. Underwriters are working through final pricing scenarios.' },
-      { name: 'Regulators', barPct: 8, basePct: 8, color: '#6b7180', change: '0%', changeClass: 'flat', detail: 'Regulatory conversation is at baseline. The California Public Utilities Commission has pending litigation on driver classification that affects the broader industry. The Securities and Exchange Commission has reviewed the offering documents but has not flagged anything publicly. David Y. at the commission is a dormant broker on the classification question. No current activity.' }
+      { name: 'Worker Advocacy', barPct: 14, basePct: 14, color: '#d97706', change: '0%', changeClass: 'flat', detail: 'At baseline. Renee Olsen posted her standard critique twice this week. Engagement is consistent with the 90-day average. The coalition is waiting for a trigger.' },
+      { name: 'Drivers (Metro)', barPct: 18, basePct: 18, color: '#c2272d', change: '0%', changeClass: 'flat', detail: 'At baseline across the 38 markets. Aisha P. in New York posts about long shifts but does not coordinate. Mild fatigue tone, no triggering event.' },
+      { name: 'Media', barPct: 22, basePct: 16, color: '#1976d2', change: '↑ 38%', changeClass: 'flat', detail: 'Janelle Foster (Bloomberg) is running an IPO preview tomorrow morning with pre-negotiated quotes. Caroline Stahl (The Information) is monitoring but not pursuing a story.' },
+      { name: 'Research/Academic', barPct: 16, basePct: 16, color: '#7b1fa2', change: '0%', changeClass: 'flat', detail: 'At baseline. Naomi Tate at Cornell has not posted on RideNet in three months. No academic critic is actively engaged.' },
+      { name: 'Riders', barPct: 20, basePct: 20, color: '#1d8a4f', change: '0%', changeClass: 'flat', detail: 'At baseline. Maya H. and James W. continue to post occasionally about service. Net positive sentiment, complaints in normal range.' },
+      { name: 'Drivers (College)', barPct: 19, basePct: 19, color: '#f59e0b', change: '0%', changeClass: 'flat', detail: 'At baseline with mild positive momentum. Tomás G. in Athens has posted about #PoweredByNeighbors, which is trending in college towns.' },
+      { name: 'Public Investors', barPct: 18, basePct: 12, color: '#5e35b1', change: '↑ 50%', changeClass: 'flat', detail: 'Elevated above usual baseline because of the public offering. Mitchell Reinhardt remains the most-quoted skeptic on metro unit economics but is still IPO-aligned.' },
+      { name: 'Regulators', barPct: 8, basePct: 8, color: '#6b7180', change: '0%', changeClass: 'flat', detail: 'At baseline. CPUC has open inquiries on driver classification but nothing active on RideNet specifically.' }
     ],
     donut: [
       { pct: 32, color: '#1976d2', name: 'IPO preview coverage', detail: 'About a third of the brand conversation is currently about the upcoming public offering. Business press is running previews, analysts are issuing notes, and the financial community is discussing pricing scenarios.' },
@@ -1969,14 +2054,14 @@ const timePoints = {
       { icon: 'gray', iconName: 'hash', title: 'Hashtag Tracking', desc: '#DeleteRideNet at 8,400 uses per hour. Trending nationally.', time: '34 MIN AGO', detail: 'The #DeleteRideNet was first used by Renee Olsen at 12:35pm and was picked up by metro driver accounts within minutes. 8,400 uses in the last hour. The hashtag is now trending nationally in the United States. App store reviews of the RideNet app have started receiving one-star ratings at five times the normal volume. Some users report deleting the app and posting screenshots of the deletion as a form of public protest. The brand #PoweredByNeighbors is now being used ironically by approximately 240 accounts.' }
     ],
     stakeholders: [
-      { name: 'Worker Advocacy', barPct: 92, basePct: 14, color: '#d97706', change: '↑ 612%', changeClass: 'up', detail: 'Worker advocacy coalition has fully mobilized. Mobility Workers Alliance, Driver Safety Coalition, Workforce Futures Foundation, and State Worker Rights Coalition have all posted within the first 90 minutes. Renee Olsen posted at 12:35pm with the post that introduced the #DeleteRideNet, with 891 thousand views in two hours. This coalition treats the story as empirical confirmation of the structural critique it has been making for three years. The driver involved, Daniel V., is being positioned as the face of the argument. Coalition first-movers have already moved. Higher-threshold members are now moving on the cascade.' },
-      { name: 'Drivers (Metro)', barPct: 78, basePct: 18, color: '#c2272d', change: '↑ 487%', changeClass: 'up', detail: 'Metro drivers across the 38 markets have mobilized rapidly. Aisha P. in New York posted within 40 minutes sharing her own Streak Bonus story. Ray D. in Atlanta has done a podcast appearance scheduled to air this afternoon. Many metro drivers are posting their own accounts in solidarity, some sharing screenshots of their app with Streak Bonus countdowns. The coalition treats the story as their lived experience finally being recognized publicly.' },
-      { name: 'Media', barPct: 56, basePct: 22, color: '#1976d2', change: '↑ 318%', changeClass: 'up', detail: 'Caroline Stahl is the highest-credibility risk in this coalition. She has emailed comms requesting comment with an 8pm Eastern deadline tonight for a piece on the crash and the Streak Bonus structure. She has been the most professionally hedged voice on X, framing the situation as alleged rather than confirmed. David Park at The Information has been tracking the story but has not yet filed. Lauren Whitcomb at the Wall Street Journal is working a financial-impact piece. Janelle Foster at Bloomberg is reassessing her preview piece scheduled for tomorrow morning.' },
-      { name: 'Research / Academic', barPct: 48, basePct: 16, color: '#7b1fa2', change: '↑ 287%', changeClass: 'up', detail: 'Research and academic critics have started moving but have not yet fully mobilized. Naomi Tate at Cornell has not personally posted, which matters because her activation would establish the substantive credibility ceiling for the labor framing. The Center on Algorithmic Accountability is reportedly preparing a research note. Hassan Qureshi at Berkeley has reposted but not commented. Higher threshold than worker advocacy. They are watching for the substance to be verified before fully committing.' },
-      { name: 'Riders', barPct: 32, basePct: 20, color: '#1d8a4f', change: '↑ 142%', changeClass: 'up', detail: 'Rider conversation has mobilized but is mixed. Some users are posting screenshots of deleted apps using the #DeleteRideNet. Maya H. has not posted. James W. has shared Kira Brooklyn\'s post without commentary. The coalition is internally split between moral concern, self-interest in continuing to use the service, and uncertainty about which parts of what is being reported reflect typical metro experience and which are unusual. The brand authenticity gap is showing: metro riders shifting faster than college town riders.' },
-      { name: 'Drivers (College)', barPct: 22, basePct: 19, color: '#f59e0b', change: '↑ 84%', changeClass: 'up', detail: 'College town drivers are barely above their baseline. Tomás G. posted a careful defense earlier this morning emphasizing his positive experience but acknowledging that the metro story might be different. The college town coalition is the slowest-moving and the most ambivalent. They do not want to attack a fellow driver but they also do not want to abandon a company that has been good to them. They are waiting for guidance, which the comms team has not yet provided.' },
-      { name: 'Public Investors', barPct: 18, basePct: 12, color: '#5e35b1', change: '↑ 67%', changeClass: 'up', detail: 'Mitchell Reinhardt has not yet posted publicly but has called the lead banks running the IPO twice this morning. Pension fund mobility investors are evaluating whether the story changes their participation. Two of the banks have asked for an emergency call with the chief executive. The Future of Mobility Forum is monitoring. The IPO investor meetings are currently underway and any uncoordinated comm response will be flagged by the banks as a regulatory disclosure risk.' },
-      { name: 'Regulators', barPct: 10, basePct: 8, color: '#6b7180', change: '↑ 32%', changeClass: 'up', detail: 'Regulator activity is up modestly but the structural risk is far higher than the mention volume suggests. David Y. at the California Public Utilities Commission is a dormant broker on the classification question. The cascade could be the triggering event for a formal request for information. If David Y. activates, his node shifts from crosscut to opposed and the worker advocacy cascade gains regulatory legitimacy. Once a regulator activates, the comm response options narrow dramatically.' }
+      { name: 'Worker Advocacy', barPct: 92, basePct: 14, color: '#d97706', change: '↑ 612%', changeClass: 'up', detail: 'Fully mobilized within 90 minutes. Renee Olsen launched #DeleteRideNet at 12:35pm (891K views). Daniel V. is being positioned as the face of the argument.' },
+      { name: 'Drivers (Metro)', barPct: 78, basePct: 18, color: '#c2272d', change: '↑ 487%', changeClass: 'up', detail: 'Mobilized rapidly. Aisha P. quote-tweeted Olsen #DeleteRideNet at 12:48pm. Ray Diaz (former driver, Atlanta) is talking to press.' },
+      { name: 'Media', barPct: 56, basePct: 22, color: '#1976d2', change: '↑ 318%', changeClass: 'up', detail: 'Caroline Stahl is the highest-credibility risk. She emailed Comms at 12:08pm for comment with an 8pm deadline. Janelle Foster is reassessing her preview piece.' },
+      { name: 'Research/Academic', barPct: 48, basePct: 16, color: '#7b1fa2', change: '↑ 287%', changeClass: 'up', detail: 'Starting to move but not fully mobilized. Naomi Tate has not personally posted. Hassan Qureshi at Berkeley has reposted but not commented.' },
+      { name: 'Riders', barPct: 32, basePct: 20, color: '#1d8a4f', change: '↑ 142%', changeClass: 'up', detail: 'About 6,400 rider posts citing #DeleteRideNet by 1:30pm. James W. shared Kira Brooklyn\'s post without commentary. Internally split between moral concern and continued reliance on the service.' },
+      { name: 'Drivers (College)', barPct: 22, basePct: 19, color: '#f59e0b', change: '↑ 84%', changeClass: 'up', detail: 'Barely above baseline. Tomás G. posted a careful hedge at 1:42pm distancing college drivers from the metro story.' },
+      { name: 'Public Investors', barPct: 18, basePct: 12, color: '#5e35b1', change: '↑ 67%', changeClass: 'up', detail: 'Mitchell Reinhardt has not posted publicly but has called the lead banks running the offering. On calls with two pension funds.' },
+      { name: 'Regulators', barPct: 10, basePct: 8, color: '#6b7180', change: '↑ 32%', changeClass: 'up', detail: 'Activity up modestly. The structural risk is higher than current activity reflects.' }
     ],
     donut: [
       { pct: 41, color: '#c2272d', name: 'Driver story / authenticity', detail: 'Forty-one percent of the conversation is about the crash itself, the driver Daniel V., and whether the framing in Kira\'s post accurately represents the platform. The crash is the news event and most of the discourse is downstream of it.' },
@@ -2138,32 +2223,32 @@ const timePoints = {
     ],
     signals: [
       { icon: 'gray', iconName: 'trending-up', title: 'Mention Volume', desc: '38,420 mentions. Up 1481 percent. Rate slowing.', time: 'ONGOING', detail: 'Mention volume has reached 38,420, which is 1481 percent above the 30-day baseline. The rate of increase has slowed but mentions are still climbing. The trajectory has not plateaued. This is sustained at the highest mention volume the brand has ever generated. The volume now exceeds the combined Uber and Lyft conversation for the same window, which has not happened before.' },
-      { icon: 'gray', iconName: 'arrows', title: 'Source Pattern', desc: 'Multi-channel. Bloomberg TV, state regulator release, podcasts.', time: 'ONGOING', detail: 'The conversation is now sustained across every major platform Brandwatch monitors. Bloomberg TV has run two segments. The California state regulator (the agency that oversees rideshare companies in the state, formally called the California Public Utilities Commission) issued a public release. Multiple podcasts have recorded episodes. The Wall Street Journal is filing in the morning. This is no longer a viral video story confined to social media. It is a multi-channel news event with regulatory and financial dimensions.' },
+      { icon: 'gray', iconName: 'arrows', title: 'Source Pattern', desc: 'Multi-channel. Bloomberg TV, state regulator release, podcasts.', time: 'ONGOING', detail: 'The conversation is now sustained across every major platform Brandwatch monitors. Bloomberg TV has run two segments. The California state regulator (the agency that oversees rideshare companies in the state, formally called the California Public Utilities Commission) issued a public release. Multiple podcasts have recorded episodes. The Wall Street Journal is filing in the morning. This is no longer a social-media-only story. It is a multi-channel news event with regulatory and financial dimensions.' },
       { icon: 'gray', iconName: 'user', title: 'Amplifier Activity', desc: 'Cornell sociologist, Wall Street analyst, state regulator.', time: '1H AGO', detail: 'The voices driving the conversation have shifted from advocacy accounts to institutional voices. Naomi Tate, a Cornell sociologist, posted at 4:18 PM with research validation of the labor framing. Mitchell Reinhardt, a Wall Street analyst, downgraded the IPO on Bloomberg this afternoon. The California state regulator (formally the California Public Utilities Commission) issued a public statement at 5:14 PM, signed by David Yamamoto, the senior policy advisor. Caroline Stahl filed her piece tonight. The conversation is now anchored by credentialed institutional voices rather than coalition activists, which makes it durable. Misinformation has also expanded: 27 fake accounts active, including a fabricated leaked Slack screenshot with 2.4 million views.' },
       { icon: 'gray', iconName: 'hash', title: 'Hashtag Tracking', desc: '#DeleteRideNet sustained. New adversarial tags emerging.', time: 'ONGOING', detail: 'DeleteRideNet has sustained through the day at 18,402 total uses. New adversarial tags are emerging including ClassifyDrivers, RideNetSEC, and PoweredByWhom from Caroline Stahl piece title. The brand-led PoweredByNeighbors has gone quiet, used positively only 47 times in the last 6 hours. The hashtag landscape has been fully captured by the adversarial framing. Actual app deletion data is being tracked separately by the data engineering team and reported by email.' }
     ],
     stakeholders: [
-      { name: 'Media', barPct: 88, basePct: 22, color: '#1976d2', change: '↑ 780%', changeClass: 'up', detail: 'Media coalition is now at peak coverage. Caroline Stahl filed her piece tonight. It ran with the headline "Powered by Whom" and contains additional sourcing from four current and former drivers. David Park at The Information filed in parallel. Lauren Whitcomb at the Wall Street Journal is running her financial-impact piece in the morning. Janelle Foster at Bloomberg is rewriting her preview. Stratechery posted an update reversing yesterday\'s favorable framing. Reuters and the New York Times are tracking. Once Caroline\'s piece established credibility, the rest of the press followed.' },
-      { name: 'Worker Advocacy', barPct: 95, basePct: 14, color: '#d97706', change: '↑ 680%', changeClass: 'up', detail: 'Worker advocacy coalition has reached saturation. Renee Olsen has done two podcast appearances and a CNN segment. The Mobility Workers Alliance has issued a formal policy demand. Driver Safety Coalition is organizing a metro driver protest for next week. The coalition is no longer the bottleneck because everyone in it is already mobilized. Their concern now is sustaining attention as other coalitions take over the narrative.' },
-      { name: 'Research / Academic', barPct: 78, basePct: 16, color: '#7b1fa2', change: '↑ 620%', changeClass: 'up', detail: 'Research and academic critics have fully mobilized. Naomi Tate\'s thread at 4:18 PM was the key inflection point for the labor framing. The Center on Algorithmic Accountability filed a research brief. This coalition mobilized through the allied tie to worker advocacy, exactly as the alignment data predicts. Their mobilization is what shifted the framing from advocacy to documented finding.' },
-      { name: 'Public Investors', barPct: 68, basePct: 12, color: '#5e35b1', change: '↑ 540%', changeClass: 'up', detail: 'Public market investors have mobilized and are now visibly shifting pricing scenarios. Mitchell Reinhardt issued his downgrade. Two pension funds have withdrawn. The lead underwriter has flagged the offering as at risk of delay. Sell-side analysts who were bullish this morning are issuing revised notes tonight. The Future of Mobility Forum held an emergency session this afternoon. Pricing now assumes a discount of at least 20 percent to the original target.' },
-      { name: 'Drivers (Metro)', barPct: 82, basePct: 18, color: '#c2272d', change: '↑ 520%', changeClass: 'up', detail: 'Metro driver coalition continues to amplify but the volume has plateaued because everyone who was going to post has now posted. Aisha P. has been quoted in Caroline Stahl\'s piece. Ray D. did the podcast appearance. The coalition has shifted from triggering the cascade to sustaining it.' },
-      { name: 'Regulators', barPct: 52, basePct: 8, color: '#6b7180', change: '↑ 380%', changeClass: 'up', detail: 'The state regulator has mobilized. The California Public Utilities Commission, which is the state agency that oversees rideshare and transportation companies in California, issued a public request for information at 5:14 PM. The federal Department of Labor has indicated it will accelerate guidance on rideshare driver classification. The Securities and Exchange Commission has not publicly responded but the state regulator request is now part of the IPO disclosure context. Once a regulator goes public, the cascade gains legal weight that does not unwind.' },
+      { name: 'Media', barPct: 88, basePct: 22, color: '#1976d2', change: '↑ 780%', changeClass: 'up', detail: 'At peak coverage. Caroline Stahl\'s "Powered by Whom?" piece ran tonight, sourcing four current and former drivers. Janelle Foster is rewriting her preview. Reuters and the New York Times are tracking. Once Caroline established credibility, the rest of the press followed.' },
+      { name: 'Worker Advocacy', barPct: 95, basePct: 14, color: '#d97706', change: '↑ 680%', changeClass: 'up', detail: 'At saturation. Renee Olsen has done two podcasts and a CNN segment. MWA issued a formal policy demand. The concern now is sustaining attention as other coalitions take over the narrative.' },
+      { name: 'Research/Academic', barPct: 78, basePct: 16, color: '#7b1fa2', change: '↑ 620%', changeClass: 'up', detail: 'Fully mobilized. Naomi Tate\'s 4:18pm thread was the inflection point for the labor framing. The Center on Algorithmic Accountability filed a research brief.' },
+      { name: 'Public Investors', barPct: 68, basePct: 12, color: '#5e35b1', change: '↑ 540%', changeClass: 'up', detail: 'Mobilized. Mitchell Reinhardt downgraded RideNet on Bloomberg TV with a 28% price target cut. Two pension funds withdrew.' },
+      { name: 'Drivers (Metro)', barPct: 82, basePct: 18, color: '#c2272d', change: '↑ 520%', changeClass: 'up', detail: 'Sustained mobilization. Aisha P. quoted in Caroline Stahl\'s piece. Ray Diaz did a podcast appearance. Volume has plateaued because everyone who was going to post has now posted.' },
+      { name: 'Regulators', barPct: 52, basePct: 8, color: '#6b7180', change: '↑ 380%', changeClass: 'up', detail: 'CPUC sent David Yamamoto 5:14pm Request for Information on driver classification practices. This is the first formal regulatory action against RideNet.' },
       { name: 'Riders', barPct: 45, basePct: 20, color: '#1d8a4f', change: '↑ 245%', changeClass: 'up', detail: 'Rider conversation has mobilized significantly but is still internally mixed. Most app deletions are concentrated in metro markets. Rider conversations on Reddit are split between moral concern and practical reliance on the platform.' },
-      { name: 'Drivers (College)', barPct: 12, basePct: 19, color: '#f59e0b', change: '↓ 22%', changeClass: 'down', detail: 'College town drivers have gone quiet. This is the most important T3 dynamic. Tomás G. has deleted his earlier defense post. College town driver posts are down 22 percent below baseline because individual drivers are now uncertain whether they want to publicly associate with a company under regulatory scrutiny. The coalition that was the strongest line of defense in T2 has fragmented. Whether it returns depends on whether comms gives them clear guidance and standing.' }
+      { name: 'Drivers (College)', barPct: 12, basePct: 19, color: '#f59e0b', change: '↓ 22%', changeClass: 'down', detail: 'Gone quiet. Tomás G. deleted his hedge post at 5:30pm. College driver post volume is down 22% from baseline.' }
     ],
     donut: [
-      { pct: 38, color: '#d97706', name: 'Classification / Regulatory', detail: 'Classification and regulatory framing now dominates the conversation. The state regulator request and the academic coalition activation have shifted the discourse from a viral video story to a labor policy story. This is the worst possible framing from RideNet\'s perspective because it locks in regulatory attention.' },
+      { pct: 38, color: '#d97706', name: 'Classification / Regulatory', detail: 'Classification and regulatory framing now dominates the conversation. The state regulator request and the academic coalition activation have shifted the discourse from a single-incident story to a labor policy story. This is the worst possible framing from RideNet\'s perspective because it locks in regulatory attention.' },
       { pct: 24, color: '#c2272d', name: 'Driver story continuing', detail: 'The crash itself and the driver Daniel V. continue to drive significant volume but are no longer the dominant frame. The story has become the precipitating event rather than the ongoing story.' },
       { pct: 22, color: '#1976d2', name: 'IPO impact / valuation', detail: 'Public market investor and financial press conversation about the offering. Mitchell Reinhardt downgrade. Two pension funds withdrawing. Underwriter scenarios. The conversation is now seriously discussing whether the offering should be delayed.' },
       { pct: 16, color: '#8a96a8', name: 'Other', detail: 'Adjacent and tangential mentions. Competitor schadenfreude. Broader gig economy critique. Industry implications.' }
     ],
     topics: [
       { word: '#DeleteRideNet', size: 42, color: '#c2272d', detail: '18,402 uses. The hashtag has sustained through the day. App deletion counts are being tracked separately by the data engineering team.' },
-      { word: 'classification', size: 38, color: '#d97706', detail: '4,103 mentions. The dominant frame. The viral video was the event but the underlying issue is the durable story.' },
+      { word: 'classification', size: 38, color: '#d97706', detail: '4,103 mentions. The dominant frame. Kira Brooklyn\'s post was the event but the underlying issue is the durable story.' },
       { word: 'valuation', size: 32, color: '#1976d2', detail: '3,247 mentions. Wall Street analyst downgrade. The financial press is now seriously discussing whether the offering should be delayed.' },
       { word: 'IPO delayed', size: 28, color: '#1976d2', detail: '1,847 mentions of speculation that the offering will be pushed past the planned pricing date.' },
-      { word: 'regulator', size: 28, color: '#c2272d', detail: '2,103 mentions. The state regulator has mobilized. Discussion now treats the situation as a regulatory exposure issue, not just a viral video.' },
+      { word: 'regulator', size: 28, color: '#c2272d', detail: '2,103 mentions. The state regulator has mobilized. Discussion now treats the situation as a regulatory exposure issue, not just a passenger-account story.' },
       { word: 'downgrade', size: 24, color: '#1976d2', detail: '987 mentions of stock analyst rating downgrades following the day\'s events.' },
       { word: 'classification lawsuit', size: 22, color: '#5e35b1', detail: '894 mentions speculating about potential classification lawsuits and settlements.' },
       { word: 'Streak Bonus', size: 26, color: '#c2272d', detail: '1,798 mentions. The RideNet incentive program. The term has entered general usage in the discourse and is now shorthand for the structural worker exploitation framing.' },
@@ -2201,7 +2286,7 @@ const timePoints = {
       { sent: 'neg', avatar: 'D', avatarBg: '#6b7180', name: 'California state regulator', handle: 'official · 35m', platform: 'NEWS', platformCls: 'news',
         text: 'STATEMENT: The California Public Utilities Commission has issued a request for information to RideNet regarding driver classification practices and the accuracy of representations in marketing materials and offering documents. Full text available on the commission website.',
         engagement: '6,402 likes · 3,294 reposts · 894 replies · 1.2M views',
-        detail: 'The California Public Utilities Commission issued a formal public request for information at 5:14 PM. Signed by David Y., Senior Policy Advisor. This is a dormant broker activating. The request is technically non-coercive but is publicly posted and treated by financial press as a regulator opening. Now part of the disclosure context for the offering. This is the activation that turns a viral video story into a regulatory exposure story.' },
+        detail: 'The California Public Utilities Commission issued a formal public request for information at 5:14 PM. Signed by David Y., Senior Policy Advisor. This is a dormant broker activating. The request is technically non-coercive but is publicly posted and treated by financial press as a regulator opening. Now part of the disclosure context for the offering. This is the activation that turns a single-incident story into a regulatory exposure story.' },
       { sent: 'neg', avatar: 'L', avatarBg: '#1a1a1a', name: 'RideNet Leaks', handle: '@ridenet_leaks · 35m', platform: 'X', platformCls: 'x', flag: 'UNVERIFIED', flagCls: 'unverified',
         text: `LEAKED INTERNAL SLACK: Senior RideNet executive seen joking on Friday that the optics are bad but the offering still prices. The company knew. They are laughing at us.
           <div class="fake-slack">
@@ -2269,94 +2354,63 @@ const timePoints = {
 // ============ NETWORK DATA ============
 
 const NODE_CATEGORIES = {
-  external:  { color: '#d97706', label: 'External critics', members: 'Worker Advocacy, Renee Olsen, Research / Academic, Regulators, Plaintiff Lawyers' },
+  external:  { color: '#d97706', label: 'External critics', members: 'Worker Advocacy, Renee Olsen, Research/Academic, Regulators, Plaintiff Lawyers' },
   drivers:   { color: '#c2272d', label: 'Drivers',           members: 'Drivers (Metro), Daniel V., Drivers (College), Tomás G.' },
   press:     { color: '#1976d2', label: 'Press',             members: 'Caroline Stahl, Janelle Foster' },
   community: { color: '#1d8a4f', label: 'Customers & community', members: 'Riders, IV Community, Lisa M.' },
-  internal:  { color: '#534AB7', label: 'Internal & financial', members: 'Comm Team, Leadership, Driver Operations, Product / Engineering, Algorithm, Public Investors, Former Employees (dashed)' }
+  internal:  { color: '#534AB7', label: 'Internal & financial', members: 'Comm Team, Leadership, Driver Operations, Public Investors' }
 };
 
 const networkNodes = [
   // External critics (Worker Advocacy amber per Listening)
   { id: 'wa',  name: 'Worker Advocacy',     category: 'external', x: 100, y: 95,  color: '#d97706',
-    detail: 'Worker advocacy stakeholder group. Mobility Workers Alliance (MWA), Driver Safety Coalition (DSC), Workforce Futures Foundation (WFF), State Worker Rights Coalition (SWRC). This group has been making the structural-conditions argument about rideshare for three years. Renee Olsen at MWA is the named broker who introduces #DeleteRideNet at T2.' },
-  { id: 'ra',  name: 'Research / Academic', category: 'external', x: 95, y: 315, color: '#7b1fa2',
-    detail: 'Naomi Tate at Cornell (labor sociologist). Hassan Qureshi at UC Berkeley (Lab on Algorithmic Inference). Center on Algorithmic Accountability is the umbrella research organization.' },
+    detail: 'This node reflects coalitions of organizations that are involved in advocating for drivers such as Mobility Workers Alliance, Driver Safety Coalition, Workforce Futures Foundation, State Worker Rights Coalition. Renee Olsen (of MWA) is a main voice of this group.' },
+  { id: 'ra',  name: 'Research/Academic', category: 'external', x: 95, y: 315, color: '#7b1fa2',
+    detail: 'This group includes those that focus on research issues related to ride sharing companies such as Naomi Tate at Cornell (labor sociologist) and Hassan Qureshi at UC Berkeley (Lab on Algorithmic Inference). The Center on Algorithmic Accountability is an umbrella research organization.' },
   { id: 'reg', name: 'Regulators (CPUC)',   category: 'external', x: 620, y: 95,  color: '#6b7180',
     detail: 'California Public Utilities Commission. David Yamamoto is the senior policy advisor. CPUC has authority over rideshare classification questions in California, which sets precedent nationally.' },
-  { id: 'plaintiff', name: 'Plaintiff Lawyers', category: 'external', x: 620, y: 440, color: '#6b7180',
-    detail: 'Class action firms tracking rideshare classification cases. Mobilizes at T3 when the Caroline Stahl piece, the CPUC RFI, and the Streak Bonus dollar amounts together create the predicate for filings.' },
 
   // Drivers (Metro red per Listening)
   { id: 'dm',  name: 'Drivers (Metro)',     category: 'drivers', x: 310, y: 95,  color: '#c2272d',
-    detail: 'Metro drivers across 38 markets. The stakeholder group at the center of the cascade. Aisha Patel is a named voice within this group. Daniel V., the NYC driver in the viral video, is the focal individual at T2.' },
+    detail: 'Metro drivers cover 38 metropolitan markets and include Aisha Patel (NYC), and Daniel V., an NYC driver.' },
   { id: 'dc',  name: 'Drivers (College)',   category: 'drivers', x: 305, y: 460, color: '#f59e0b',
-    detail: 'College town drivers. Initially the brand-story carrier (#PoweredByNeighbors). Goes quiet at T3 once the metro story becomes the dominant frame. Tomás G., a 28-month driver in Athens with a 4.96 rating, is the quiet anchor of this group.' },
+    detail: 'Drivers in college towns carry the #PoweredByNeighbors brand story. Tomás G. in Athens is one of these people.' },
 
   // Press (blue) - outlet in parentheses
   { id: 'caroline_n', name: 'Caroline Stahl (The Information)', category: 'press', x: 440, y: 115, color: '#1976d2',
-    detail: 'Caroline Stahl, independent investigative journalist who files with The Information. Wrote the Wired investigation on RideNet data inference practices last year. SH-011 in the McKinsey stakeholder appendix.' },
+    detail: 'Independent investigative journalist who files with The Information. Wrote the Wired investigation on RideNet data inference practices last year.' },
   { id: 'janelle_n',  name: 'Janelle Foster (Bloomberg)', category: 'press', x: 555, y: 165, color: '#1976d2',
-    detail: 'Janelle Foster, senior mobility reporter at Bloomberg. Covers rideshare and platform economics.' },
+    detail: 'Senior mobility reporter at Bloomberg. Covers rideshare and platform economics.' },
 
   // Customers & community (Riders green per Listening)
   { id: 'ri',  name: 'Riders',              category: 'community', x: 470, y: 460, color: '#1d8a4f',
-    detail: 'Rider population. Maya H. in Boulder and James W. in Seattle are illustrative named individuals.' },
+    detail: 'Riders are those that use RideNet. In this dataset, riders include Maya H. in Boulder and James W. in Seattle.' },
   { id: 'iv_community', name: 'IV Community', category: 'community', x: 115, y: 480, color: '#1d8a4f',
-    detail: 'Isla Vista community. Bonded to RideNet through the founding story and local hiring. Lisa M., Executive Director of the IV community services nonprofit, has a strong personal bonding tie to Betina Greco (SH-014); when she is quoted publicly at T3, that activates the IV Community tension tie to Leadership.' },
+    detail: 'This node reflects the Isla Vista community, who is bonded to RideNet through the founding story. Lisa M., executive director of the IV community services nonprofit, has a personal tie to Betina Greco.' },
 
   // Internal RideNet (indigo) and Public Investors (Listening PI purple)
   { id: 'it',  name: 'Comm Team',           category: 'internal', x: 230, y: 220, color: '#534AB7',
-    detail: 'Comm Team: the Communications Department. The Comm Team coordinates with Driver Operations on driver-facing messaging, and with Leadership on external posture. It does not have a direct line to drivers; that runs through Driver Operations and the Algorithm.' },
+    detail: 'RideNet\'s communication department. Responsible for coordinating with RideNet\'s Driver Operations on driver-facing messaging and Leadership on external posture.' },
   { id: 'driver_ops', name: 'Driver Operations', category: 'internal', x: 345, y: 195, color: '#534AB7',
-    detail: 'Driver Operations team. Owns driver support, onboarding, the in-app driver experience, and the design of surge and bonus programs. Anika Solberg (COO) oversees. Priya Nair (VP Trust & Safety) sits at the safety / ops boundary. This is the team with the active operational ties to drivers, not Comms.' },
-  { id: 'prod_eng', name: 'Product / Engineering', category: 'internal', x: 345, y: 295, color: '#534AB7',
-    detail: 'Product and Engineering team. Bobby San (CTO). Owns the Algorithm, the bonus mechanics, the matching logic, and the data infrastructure that underlies RideNet Social.' },
-  { id: 'algorithm', name: 'Algorithm', category: 'internal', x: 275, y: 370, color: '#534AB7', dashedOutline: true,
-    detail: 'The platform Algorithm. Sends bonus notifications, surge prompts, deactivation warnings, and matches. Acts on drivers directly without a human in the loop. Drawn with a dashed outline because it is an artifact-actor, not a human one. The Streak Bonus is mediated entirely through it.' },
+    detail: 'The Driver Operations department at RideNet manages driver support, onboarding, the in-app driver experience, and surge and bonus program design. Anika Solberg (COO) oversees this department and Priya Nair (VP Trust and Safety) is part of the department\'s safety/ops.' },
   { id: 'lf',  name: 'Leadership',        category: 'internal', x: 480, y: 320, color: '#534AB7',
-    detail: 'Leadership. Betina Greco (CEO, founder, Board Chair) is the face: her personal social capital carries the IPO roadshow, the IV community relationship, and the founder visibility issue. Bobby San (CTO, co-founder). Theresa Lin sits on the board as Lead Independent Director and is pushing the Comm Team toward an IPO contingency plan. The Leadership node represents Betina plus the board structure she chairs.' },
+    detail: 'Leadership includes Betina Greco (CEO, founder, Board Chair), Bobby San (CTO, co-founder), and Theresa Lin (Lead Independent Director of RideNet\'s Board).' },
   { id: 'pi',  name: 'Public Investors',    category: 'internal', x: 620, y: 270, color: '#5e35b1',
-    detail: 'Public investor side. Mitchell Reinhardt (sell-side analyst, SH-010). Pension funds and lead underwriter banks.' },
-  { id: 'former_emp', name: 'Former Employees', category: 'internal', x: 170, y: 165, color: '#534AB7', dashedOutline: true,
-    detail: 'Former employees. Anna T. (SH-001, former Chief of Staff). Dashed outline indicates they are not currently inside the company.' }
+    detail: 'This group includes Mitchell Reinhardt (sell-side analyst), pension funds, and lead underwriter banks.' },
 ];
 
 const networkData = {
   1: {
-    nodeActivity: { wa: 0.25, dm: 0.30, dc: 0.40, ri: 0.40, ra: 0.25, caroline_n: 0.20, janelle_n: 0.40, reg: 0.20, pi: 0.55, it: 0.55, driver_ops: 0.65, prod_eng: 0.60, algorithm: 0.55, lf: 0.65, iv_community: 0.30, plaintiff: 0.05, former_emp: 0.10 },
+    nodeActivity: { wa: 0.25, dm: 0.30, dc: 0.40, ri: 0.40, ra: 0.25, caroline_n: 0.20, janelle_n: 0.40, reg: 0.20, pi: 0.55, it: 0.55, driver_ops: 0.65, lf: 0.65, iv_community: 0.30 },
     edges: [
-      { from: 'wa', to: 'dm', state: 'dormant', type: 'allied' },
-      { from: 'wa', to: 'ra', state: 'dormant', type: 'allied' },
-      { from: 'wa', to: 'caroline_n', state: 'dormant', type: 'allied' },
-      { from: 'wa', to: 'reg', state: 'dormant', type: 'allied' },
-      { from: 'ra', to: 'caroline_n', state: 'dormant', type: 'allied' },
-      { from: 'ra', to: 'reg', state: 'dormant', type: 'allied' },
-      { from: 'janelle_n', to: 'pi', state: 'dormant', type: 'allied' },
-      { from: 'dm', to: 'ri', state: 'dormant', type: 'allied' },
-      { from: 'dm', to: 'caroline_n', state: 'dormant', type: 'allied' },
-      { from: 'dc', to: 'dm', state: 'dormant', type: 'crosscutting' },
-      { from: 'dc', to: 'ri', state: 'dormant', type: 'allied' },
-      { from: 'reg', to: 'pi', state: 'dormant', type: 'crosscutting' },
-      { from: 'lf', to: 'reg', state: 'dormant', type: 'allied' },
-      { from: 'it', to: 'lf', state: 'tension', type: 'allied' },
-      { from: 'it', to: 'driver_ops', state: 'active', type: 'allied' },
-      { from: 'lf', to: 'pi', state: 'tension', type: 'allied' },
-      { from: 'lf', to: 'janelle_n', state: 'active', type: 'allied' },
-      { from: 'lf', to: 'driver_ops', state: 'active', type: 'allied' },
-      { from: 'lf', to: 'prod_eng', state: 'active', type: 'allied' },
-      { from: 'driver_ops', to: 'dm', state: 'active', type: 'allied' },
-      { from: 'driver_ops', to: 'dc', state: 'active', type: 'allied' },
-      { from: 'driver_ops', to: 'ri', state: 'active', type: 'allied' },
-      { from: 'driver_ops', to: 'prod_eng', state: 'active', type: 'allied' },
-      { from: 'prod_eng', to: 'algorithm', state: 'active', type: 'allied' },
-      { from: 'algorithm', to: 'dm', state: 'active', type: 'allied' },
-      { from: 'algorithm', to: 'dc', state: 'active', type: 'allied' },
-      { from: 'lf', to: 'dm', state: 'dormant', type: 'allied' },
-      { from: 'lf', to: 'iv_community', state: 'dormant', type: 'allied' },
-      { from: 'former_emp', to: 'it', state: 'dormant', type: 'allied' },
-      { from: 'it', to: 'iv_community', state: 'active', type: 'allied' },
-      { from: 'it', to: 'janelle_n', state: 'active', type: 'allied' }
+      { from: 'lf', to: 'it', state: 'active', type: 'allied', strength: 'strong' },
+      { from: 'it', to: 'driver_ops', state: 'active', type: 'allied', strength: 'strong' },
+      { from: 'iv_community', to: 'lf', state: 'dormant', type: 'allied', strength: 'weak' },
+      { from: 'janelle_n', to: 'it', state: 'active', type: 'allied', strength: 'moderate' },
+      { from: 'dc', to: 'ri', state: 'active', type: 'allied', strength: 'moderate' },
+      { from: 'pi', to: 'lf', state: 'tension', type: 'crosscutting', strength: 'moderate' },
+      { from: 'wa', to: 'lf', state: 'dormant', type: 'opposed', strength: 'moderate' },
+      { from: 'dm', to: 'lf', state: 'dormant', type: 'crosscutting', strength: 'weak' }
     ],
     evidence: [
       {
@@ -2390,39 +2444,15 @@ const networkData = {
   2: {
     nodeActivity: { wa: 0.95, dm: 0.85, dc: 0.45, ri: 0.55, ra: 0.45, caroline_n: 0.90, janelle_n: 0.30, reg: 0.30, pi: 0.55, it: 0.85, driver_ops: 0.90, prod_eng: 0.55, algorithm: 0.75, lf: 0.95, iv_community: 0.25, plaintiff: 0.15, former_emp: 0.40 },
     edges: [
-      { from: 'wa', to: 'dm', state: 'active', type: 'allied' },
-      { from: 'wa', to: 'ra', state: 'dormant', type: 'allied' },
-      { from: 'wa', to: 'caroline_n', state: 'active', type: 'allied' },
-      { from: 'wa', to: 'reg', state: 'dormant', type: 'allied' },
-      { from: 'ra', to: 'caroline_n', state: 'dormant', type: 'allied' },
-      { from: 'ra', to: 'reg', state: 'dormant', type: 'allied' },
-      { from: 'janelle_n', to: 'pi', state: 'dormant', type: 'allied' },
-      { from: 'dm', to: 'ri', state: 'active', type: 'allied' },
-      { from: 'dm', to: 'caroline_n', state: 'active', type: 'allied' },
-      { from: 'dc', to: 'dm', state: 'tension', type: 'crosscutting' },
-      { from: 'dc', to: 'ri', state: 'dormant', type: 'allied' },
-      { from: 'reg', to: 'pi', state: 'dormant', type: 'crosscutting' },
-      { from: 'it', to: 'lf', state: 'active', type: 'allied' },
-      { from: 'it', to: 'driver_ops', state: 'active', type: 'allied' },
-      { from: 'it', to: 'ri', state: 'tension', type: 'allied' },
-      { from: 'lf', to: 'pi', state: 'tension', type: 'allied' },
-      { from: 'lf', to: 'janelle_n', state: 'active', type: 'allied' },
-      { from: 'lf', to: 'reg', state: 'dormant', type: 'allied' },
-      { from: 'lf', to: 'driver_ops', state: 'active', type: 'allied' },
-      { from: 'lf', to: 'prod_eng', state: 'active', type: 'allied' },
-      { from: 'driver_ops', to: 'dm', state: 'active', type: 'allied' },
-      { from: 'driver_ops', to: 'dc', state: 'active', type: 'allied' },
-      { from: 'driver_ops', to: 'ri', state: 'active', type: 'allied' },
-      { from: 'driver_ops', to: 'prod_eng', state: 'active', type: 'allied' },
-      { from: 'prod_eng', to: 'algorithm', state: 'active', type: 'allied' },
-      { from: 'algorithm', to: 'dm', state: 'active', type: 'allied' },
-      { from: 'algorithm', to: 'dc', state: 'active', type: 'allied' },
-      { from: 'lf', to: 'dm', state: 'dormant', type: 'allied' },
-      { from: 'lf', to: 'iv_community', state: 'dormant', type: 'allied' },
-      { from: 'former_emp', to: 'it', state: 'tension', type: 'allied' },
-      { from: 'it', to: 'iv_community', state: 'dormant', type: 'allied' },
-      { from: 'it', to: 'janelle_n', state: 'active', type: 'allied' },
-      { from: 'it', to: 'caroline_n', state: 'tension', type: 'allied' }
+      { from: 'dm', to: 'lf', state: 'active', type: 'opposed', strength: 'strong' },
+      { from: 'wa', to: 'dm', state: 'active', type: 'allied', strength: 'strong' },
+      { from: 'ri', to: 'lf', state: 'active', type: 'opposed', strength: 'strong' },
+      { from: 'it', to: 'lf', state: 'tension', type: 'allied', strength: 'strong' },
+      { from: 'caroline_n', to: 'dm', state: 'active', type: 'allied', strength: 'moderate' },
+      { from: 'caroline_n', to: 'it', state: 'active', type: 'opposed', strength: 'moderate' },
+      { from: 'caroline_n', to: 'wa', state: 'active', type: 'allied', strength: 'moderate' },
+      { from: 'janelle_n', to: 'dm', state: 'active', type: 'allied', strength: 'moderate' },
+      { from: 'dc', to: 'dm', state: 'tension', type: 'crosscutting', strength: 'weak' }
     ],
     evidence: [
       {
@@ -2486,42 +2516,16 @@ const networkData = {
   3: {
     nodeActivity: { wa: 1.0, dm: 0.85, dc: 0.12, ri: 0.65, ra: 0.95, caroline_n: 1.0, janelle_n: 0.30, reg: 0.75, pi: 0.85, it: 0.95, driver_ops: 0.90, prod_eng: 0.75, algorithm: 0.65, lf: 1.0, iv_community: 0.70, plaintiff: 0.80, former_emp: 0.55 },
     edges: [
-      { from: 'wa', to: 'dm', state: 'active', type: 'allied' },
-      { from: 'wa', to: 'ra', state: 'active', type: 'allied' },
-      { from: 'wa', to: 'caroline_n', state: 'active', type: 'allied' },
-      { from: 'wa', to: 'reg', state: 'active', type: 'allied' },
-      { from: 'ra', to: 'caroline_n', state: 'active', type: 'allied' },
-      { from: 'ra', to: 'reg', state: 'active', type: 'allied' },
-      { from: 'caroline_n', to: 'pi', state: 'active', type: 'allied' },
-      { from: 'janelle_n', to: 'pi', state: 'dormant', type: 'allied' },
-      { from: 'dm', to: 'ri', state: 'active', type: 'allied' },
-      { from: 'dm', to: 'caroline_n', state: 'active', type: 'allied' },
-      { from: 'dc', to: 'dm', state: 'dormant', type: 'crosscutting' },
-      { from: 'dc', to: 'ri', state: 'dormant', type: 'allied' },
-      { from: 'reg', to: 'pi', state: 'active', type: 'crosscutting' },
-      { from: 'it', to: 'lf', state: 'active', type: 'allied' },
-      { from: 'it', to: 'driver_ops', state: 'active', type: 'allied' },
-      { from: 'it', to: 'ri', state: 'tension', type: 'allied' },
-      { from: 'lf', to: 'pi', state: 'tension', type: 'allied' },
-      { from: 'lf', to: 'reg', state: 'active', type: 'allied' },
-      { from: 'lf', to: 'driver_ops', state: 'active', type: 'allied' },
-      { from: 'lf', to: 'prod_eng', state: 'active', type: 'allied' },
-      { from: 'driver_ops', to: 'dm', state: 'tension', type: 'allied' },
-      { from: 'driver_ops', to: 'dc', state: 'tension', type: 'allied' },
-      { from: 'driver_ops', to: 'ri', state: 'active', type: 'allied' },
-      { from: 'driver_ops', to: 'prod_eng', state: 'tension', type: 'allied' },
-      { from: 'prod_eng', to: 'algorithm', state: 'active', type: 'allied' },
-      { from: 'algorithm', to: 'dm', state: 'tension', type: 'allied' },
-      { from: 'algorithm', to: 'dc', state: 'active', type: 'allied' },
-      { from: 'lf', to: 'dm', state: 'dormant', type: 'allied' },
-      { from: 'lf', to: 'iv_community', state: 'dormant', type: 'allied' },
-      { from: 'plaintiff', to: 'lf', state: 'active', type: 'crosscutting' },
-      { from: 'plaintiff', to: 'pi', state: 'active', type: 'crosscutting' },
-      { from: 'plaintiff', to: 'prod_eng', state: 'active', type: 'crosscutting' },
-      { from: 'former_emp', to: 'it', state: 'tension', type: 'allied' },
-      { from: 'it', to: 'iv_community', state: 'dormant', type: 'allied' },
-      { from: 'it', to: 'reg', state: 'tension', type: 'allied' },
-      { from: 'it', to: 'caroline_n', state: 'tension', type: 'allied' }
+      { from: 'ra', to: 'wa', state: 'active', type: 'allied', strength: 'strong' },
+      { from: 'caroline_n', to: 'ra', state: 'active', type: 'allied', strength: 'strong' },
+      { from: 'caroline_n', to: 'dm', state: 'active', type: 'allied', strength: 'strong' },
+      { from: 'pi', to: 'lf', state: 'active', type: 'opposed', strength: 'strong' },
+      { from: 'reg', to: 'lf', state: 'active', type: 'opposed', strength: 'strong' },
+      { from: 'it', to: 'lf', state: 'tension', type: 'allied', strength: 'strong' },
+      { from: 'caroline_n', to: 'lf', state: 'active', type: 'opposed', strength: 'strong' },
+      { from: 'iv_community', to: 'lf', state: 'tension', type: 'allied', strength: 'moderate' },
+      { from: 'driver_ops', to: 'it', state: 'tension', type: 'allied', strength: 'moderate' },
+      { from: 'dc', to: 'dm', state: 'defected', type: 'crosscutting', strength: 'weak' }
     ],
     evidence: [
       {
@@ -2537,7 +2541,7 @@ const networkData = {
         edgeFrom: 'ra', edgeTo: 'caroline_n', titleClass: '',
         title: 'Research and Caroline Stahl, citation chain',
         items: [
-          { time: '8:00 PM', actor: 'Caroline Stahl, "Powered by Whom"', text: 'Stahl piece published. Quotes Tate: "What he describes on camera is what my work has been describing in journal articles for three years." Becomes canonical journalist account.' }
+          { time: '8:00 PM', actor: 'Caroline Stahl, "Powered by Whom"', text: 'Stahl piece published. Quotes Tate: "What he describes is what my work has been describing in journal articles for three years." Becomes canonical journalist account.' }
         ]
       },
       {
@@ -2703,6 +2707,7 @@ function goToTime(n) {
   document.getElementById('article-modal').classList.remove('active');
   // Then change time
   currentTime = n;
+  if (n === 3) hasCompletedAllRounds = true;
   setDefaultEdgeStatesForTime(currentTime);
   syncFilterUI();
   currentFolder = 'inbox';
@@ -2712,8 +2717,8 @@ function goToTime(n) {
   document.querySelectorAll('.gm-nav-item').forEach(b => {
     b.classList.toggle('active', b.dataset.folder === 'inbox');
   });
-  // Hide Back button on T1
-  document.getElementById('back-btn').style.display = currentTime === 1 ? 'none' : '';
+  // Hide Back button on T1 unless all three rounds have been seen at least once
+  document.getElementById('back-btn').style.display = (currentTime === 1 && !hasCompletedAllRounds) ? 'none' : '';
   // Show Download submission button only at the final time point
   document.getElementById('download-submission-btn').style.display = currentTime === 3 ? '' : 'none';
   renderAll();
@@ -3065,7 +3070,7 @@ function renderCategoryLegend() {
   // This matches the per-stakeholder-group colors on the Listening dashboard.
   const groups = [
     { color: '#d97706', name: 'Worker Advocacy', members: 'Worker Advocacy, Renee Olsen' },
-    { color: '#7b1fa2', name: 'Research / Academic', members: 'Research / Academic' },
+    { color: '#7b1fa2', name: 'Research/Academic', members: 'Research/Academic' },
     { color: '#6b7180', name: 'Regulators & Legal', members: 'Regulators (CPUC), Plaintiff Lawyers' },
     { color: '#c2272d', name: 'Drivers (Metro)', members: 'Drivers (Metro), Daniel V.' },
     { color: '#f59e0b', name: 'Drivers (College)', members: 'Drivers (College), Tomás G.' },
@@ -3193,17 +3198,20 @@ function renderNetwork() {
   } else {
     tp.edges.forEach(edge => {
       if (hiddenNodes.has(edge.from) || hiddenNodes.has(edge.to)) return;
-      if (edge.state === 'dormant') return;
       const from = networkNodes.find(n => n.id === edge.from);
       const to = networkNodes.find(n => n.id === edge.to);
       if (!from || !to) return;
       const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       l.setAttribute('x1', from.x); l.setAttribute('y1', from.y);
       l.setAttribute('x2', to.x); l.setAttribute('y2', to.y);
-      l.setAttribute('stroke', '#94a0b1');
-      l.setAttribute('stroke-width', 1.6);
-      const edgeOp = Math.min(nodeOpacity(from), nodeOpacity(to)) === 1.0 ? 0.7 : 0.15;
-      l.setAttribute('stroke-opacity', edgeOp);
+      // Width and opacity by strength only
+      const widthByStrength = { weak: 1.5, moderate: 2.5, strong: 4 };
+      const opacityByStrength = { weak: 0.4, moderate: 0.65, strong: 0.9 };
+      l.setAttribute('stroke-width', widthByStrength[edge.strength] || 2);
+      l.setAttribute('stroke', '#475569');
+      const baseOpacity = opacityByStrength[edge.strength] || 0.65;
+      const focusFade = Math.min(nodeOpacity(from), nodeOpacity(to)) === 1.0 ? 1 : 0.2;
+      l.setAttribute('stroke-opacity', baseOpacity * focusFade);
       l.setAttribute('stroke-linecap', 'round');
       l.setAttribute('class', 'bw-network-edge');
       svg.appendChild(l);
@@ -3336,86 +3344,56 @@ function renderCentralityPanel() {
   }
 }
 
-const NODE_SHORT_NAMES = {
-  wa: 'Worker Advocacy',
-  dm: 'Drivers (Metro)',
-  dc: 'Drivers (College)',
-  ri: 'Riders',
-  iv_community: 'IV Community',
-  ra: 'Research / Academic',
-  caroline_n: 'Caroline Stahl (The Information)',
-  janelle_n: 'Janelle Foster (Bloomberg)',
-  reg: 'Regulators (CPUC)',
-  pi: 'Public Investors',
-  it: 'Comm Team',
-  driver_ops: 'Driver Operations',
-  prod_eng: 'Product / Engineering',
-  algorithm: 'Algorithm',
-  lf: 'Leadership',
-  plaintiff: 'Plaintiff Lawyers',
-  former_emp: 'Former Employees'
-};
+const NODE_SHORT_NAMES = { wa: 'Worker Advocacy', dm: 'Drivers (Metro)', dc: 'Drivers (College)', ri: 'Riders', iv_community: 'IV Community', ra: 'Research/Academic', caroline_n: 'Caroline Stahl (The Information)', janelle_n: 'Janelle Foster (Bloomberg)', reg: 'Regulators (CPUC)', pi: 'Public Investors', it: 'Comm Team', driver_ops: 'Driver Operations', lf: 'Leadership' };
 
 // Centrality computed in NetworkX on the active subgraph at each time point.
 // Active subgraph = ties in state {active, tension}; dormant ties excluded. (Defected state has been retired.)
 // Closeness uses Wasserman-Faust normalization (wf_improved=True). Betweenness is normalized.
 const centralityData = {
   1: [
-    { node: 'driver_ops', deg: 6, close: 0.446, btwn: 0.192 },
-    { node: 'lf', deg: 5, close: 0.417, btwn: 0.121 },
-    { node: 'it', deg: 4, close: 0.368, btwn: 0.092 },
-    { node: 'prod_eng', deg: 3, close: 0.347, btwn: 0.039 },
-    { node: 'dm', deg: 2, close: 0.298, btwn: 0.010 },
-    { node: 'dc', deg: 2, close: 0.298, btwn: 0.010 },
-    { node: 'janelle_n', deg: 2, close: 0.284, btwn: 0.000 },
-    { node: 'ri', deg: 1, close: 0.272, btwn: 0.000 },
-    { node: 'algorithm', deg: 3, close: 0.272, btwn: 0.013 },
-    { node: 'pi', deg: 1, close: 0.260, btwn: 0.000 },
-    { node: 'iv_community', deg: 1, close: 0.240, btwn: 0.000 },
+    { node: 'lf', deg: 5, close: 0.454, btwn: 0.273 },
+    { node: 'it', deg: 3, close: 0.371, btwn: 0.167 },
+    { node: 'wa', deg: 1, close: 0.272, btwn: 0.000 },
+    { node: 'dm', deg: 1, close: 0.272, btwn: 0.000 },
+    { node: 'pi', deg: 1, close: 0.272, btwn: 0.000 },
+    { node: 'iv_community', deg: 1, close: 0.272, btwn: 0.000 },
+    { node: 'janelle_n', deg: 1, close: 0.240, btwn: 0.000 },
+    { node: 'driver_ops', deg: 1, close: 0.240, btwn: 0.000 },
+    { node: 'dc', deg: 1, close: 0.083, btwn: 0.000 },
+    { node: 'ri', deg: 1, close: 0.083, btwn: 0.000 },
     { node: 'caroline_n', deg: 0, close: 0.000, btwn: 0.000 },
-    { node: 'former_emp', deg: 0, close: 0.000, btwn: 0.000 },
-    { node: 'plaintiff', deg: 0, close: 0.000, btwn: 0.000 },
     { node: 'ra', deg: 0, close: 0.000, btwn: 0.000 },
-    { node: 'reg', deg: 0, close: 0.000, btwn: 0.000 },
-    { node: 'wa', deg: 0, close: 0.000, btwn: 0.000 }
+    { node: 'reg', deg: 0, close: 0.000, btwn: 0.000 }
   ],
   2: [
-    { node: 'driver_ops', deg: 6, close: 0.500, btwn: 0.131 },
-    { node: 'it', deg: 6, close: 0.474, btwn: 0.177 },
-    { node: 'lf', deg: 5, close: 0.450, btwn: 0.132 },
-    { node: 'dm', deg: 6, close: 0.429, btwn: 0.103 },
-    { node: 'ri', deg: 3, close: 0.409, btwn: 0.010 },
-    { node: 'caroline_n', deg: 3, close: 0.391, btwn: 0.044 },
-    { node: 'dc', deg: 3, close: 0.375, btwn: 0.006 },
-    { node: 'prod_eng', deg: 3, close: 0.375, btwn: 0.033 },
-    { node: 'janelle_n', deg: 2, close: 0.346, btwn: 0.000 },
-    { node: 'algorithm', deg: 3, close: 0.346, btwn: 0.015 },
-    { node: 'wa', deg: 2, close: 0.321, btwn: 0.000 },
-    { node: 'former_emp', deg: 1, close: 0.300, btwn: 0.000 },
-    { node: 'pi', deg: 1, close: 0.290, btwn: 0.000 },
+    { node: 'dm', deg: 5, close: 0.454, btwn: 0.212 },
+    { node: 'lf', deg: 3, close: 0.371, btwn: 0.114 },
+    { node: 'caroline_n', deg: 3, close: 0.340, btwn: 0.038 },
+    { node: 'wa', deg: 2, close: 0.314, btwn: 0.000 },
+    { node: 'it', deg: 2, close: 0.292, btwn: 0.015 },
+    { node: 'dc', deg: 1, close: 0.272, btwn: 0.000 },
+    { node: 'janelle_n', deg: 1, close: 0.272, btwn: 0.000 },
+    { node: 'ri', deg: 1, close: 0.240, btwn: 0.000 },
+    { node: 'driver_ops', deg: 0, close: 0.000, btwn: 0.000 },
     { node: 'iv_community', deg: 0, close: 0.000, btwn: 0.000 },
-    { node: 'plaintiff', deg: 0, close: 0.000, btwn: 0.000 },
+    { node: 'pi', deg: 0, close: 0.000, btwn: 0.000 },
     { node: 'ra', deg: 0, close: 0.000, btwn: 0.000 },
     { node: 'reg', deg: 0, close: 0.000, btwn: 0.000 }
   ],
   3: [
-    { node: 'lf', deg: 6, close: 0.557, btwn: 0.122 },
-    { node: 'it', deg: 6, close: 0.533, btwn: 0.167 },
-    { node: 'driver_ops', deg: 6, close: 0.533, btwn: 0.144 },
-    { node: 'dm', deg: 5, close: 0.490, btwn: 0.113 },
-    { node: 'caroline_n', deg: 5, close: 0.490, btwn: 0.080 },
-    { node: 'reg', deg: 5, close: 0.490, btwn: 0.079 },
-    { node: 'wa', deg: 4, close: 0.438, btwn: 0.029 },
-    { node: 'ri', deg: 3, close: 0.438, btwn: 0.008 },
-    { node: 'pi', deg: 4, close: 0.438, btwn: 0.035 },
-    { node: 'prod_eng', deg: 4, close: 0.438, btwn: 0.051 },
-    { node: 'algorithm', deg: 3, close: 0.395, btwn: 0.031 },
-    { node: 'plaintiff', deg: 3, close: 0.395, btwn: 0.008 },
-    { node: 'ra', deg: 3, close: 0.371, btwn: 0.002 },
-    { node: 'dc', deg: 2, close: 0.360, btwn: 0.006 },
-    { node: 'former_emp', deg: 1, close: 0.340, btwn: 0.000 },
-    { node: 'iv_community', deg: 0, close: 0.000, btwn: 0.000 },
-    { node: 'janelle_n', deg: 0, close: 0.000, btwn: 0.000 }
+    { node: 'lf', deg: 5, close: 0.490, btwn: 0.515 },
+    { node: 'caroline_n', deg: 3, close: 0.463, btwn: 0.424 },
+    { node: 'it', deg: 2, close: 0.347, btwn: 0.136 },
+    { node: 'dm', deg: 2, close: 0.333, btwn: 0.136 },
+    { node: 'ra', deg: 2, close: 0.333, btwn: 0.136 },
+    { node: 'reg', deg: 1, close: 0.321, btwn: 0.000 },
+    { node: 'pi', deg: 1, close: 0.321, btwn: 0.000 },
+    { node: 'iv_community', deg: 1, close: 0.321, btwn: 0.000 },
+    { node: 'driver_ops', deg: 1, close: 0.253, btwn: 0.000 },
+    { node: 'wa', deg: 1, close: 0.245, btwn: 0.000 },
+    { node: 'dc', deg: 1, close: 0.245, btwn: 0.000 },
+    { node: 'janelle_n', deg: 0, close: 0.000, btwn: 0.000 },
+    { node: 'ri', deg: 0, close: 0.000, btwn: 0.000 }
   ]
 };
 
@@ -3671,9 +3649,9 @@ function markListeningReviewed() {
 }
 
 function updateListeningGateUI() {
-  const reviewed = listeningReviewed[currentTime];
+  // Listening gate removed; ensure no lock state lingers on the Gmail tab
   const gmailTab = document.getElementById('gmail-tab');
-  if (gmailTab) gmailTab.classList.toggle('locked', !reviewed);
+  if (gmailTab) gmailTab.classList.remove('locked');
 }
 
 function downloadSubmission() {
@@ -3729,10 +3707,6 @@ function downloadSubmission() {
 }
 
 function switchTab(tabName) {
-  if (tabName === 'gmail' && !listeningReviewed[currentTime]) {
-    showToast('Review the Brandwatch dashboard first, then click "Done reviewing"');
-    return;
-  }
   document.querySelectorAll('.chrome-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.tab === tabName);
   });
@@ -3750,6 +3724,7 @@ function openEmail(id) {
   currentEmail = id;
   readMessages[currentTime].add(id);
   updateInboxCount();
+  maybeShowAdvanceTutorial();
   const labelHtml = e.label ? `<span class="gm-reader-label-pill ${e.label.cls === 'urgent' ? '' : e.label.cls}">${e.label.text}</span>` : '';
   document.getElementById('gm-reader-body').innerHTML = `
     <div class="gm-reader-subject">${e.subject}${labelHtml}</div>
@@ -3924,6 +3899,26 @@ function sendMessage() {
   updateFolderCounts();
   if (currentFolder === 'sent') renderSent();
   if (currentFolder === 'drafts') renderDrafts();
+  maybeShowAdvanceTutorial();
+}
+
+let hasShownAdvanceTutorial = { 1: false, 2: false, 3: false };
+let hasCompletedAllRounds = false;
+
+function maybeShowAdvanceTutorial() {
+  if (hasShownAdvanceTutorial[currentTime]) return;
+  const missing = getMissingTasks(currentTime);
+  if (missing.length > 0) return;
+  hasShownAdvanceTutorial[currentTime] = true;
+  // Small delay so the "Message sent" toast doesn't overlap the modal
+  setTimeout(() => {
+    document.getElementById('advance-tutorial-modal').classList.add('active');
+  }, 400);
+}
+
+function dismissAdvanceTutorial() {
+  document.getElementById('advance-tutorial-modal').classList.remove('active');
+  switchTab('dashboard');
 }
 
 function nowStamp() {
